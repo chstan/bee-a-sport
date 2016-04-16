@@ -1,0 +1,16 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+footer {
+  height: 80px;
+  background-color: #DDDDDD;
+
+  ul {
+    list-style: none;
+    li {
+      display: inline-block;
+      margin: 8px;
+    }
+  }
+}
