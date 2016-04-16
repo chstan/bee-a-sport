@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app)
 var io = require('socket.io').listen(server);
+var _ = require('lodash');
 
 var runningPortNumber = process.env.PORT || 8080;
 
@@ -10,18 +11,18 @@ app.configure(function(){
     app.use('/static', express.static(__dirname + '/static'));
 });
 
+var games = {};
 
 io.sockets.on('connection', function (socket) {
-
-    io.sockets.emit('blast', {msg:"<span style=\"color:red !important\">someone connected</span>"});
-
-    socket.on('blast', function(data, fn) {
-        console.log(data);
-        io.sockets.emit('blast', {msg:data.msg});
-
-        fn();//call the client back to clear out the field
+    socket.on('register', function(key) {
+        if (_.size(players[key]) < 2) {
+            players[key].push(socket);
+        }
     });
 
+    socket.on('move', function(move) {
+        _.without(players[key], socket)[0].emit(move);
+    });
 });
 
 server.listen(runningPortNumber);

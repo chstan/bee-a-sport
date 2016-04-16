@@ -5,11 +5,20 @@ module.exports = {
         filename : 'app.dist.js'
     },
     module : {
-        loaders: [ {
+        loaders: [
+            {
+                exclude: /node_modules/,
+                loader : 'babel-loader',
                 test   : /.js$/,
-                loader : 'babel-loader'
-            }
+                query: {
+                    presets: ['es2015']
+                }
+            },
+            {
+                loader: 'json',
+                test: /\.json$/,
+            },
         ]
     }
 };
- 
+
