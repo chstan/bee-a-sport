@@ -22,8 +22,8 @@ class ControlsListener {
   }
 
   get controlsForBee() {
-    const left = ['w', 'a', 'd'].map(key => 5 in this.pressedKeys ? 1 : 0);
-    const right = ['i', 'j', 'l'].map(key => 5 in this.pressedKeys ? 1 : 0);
+    const left = ['w', 'a', 'd'].map(key => key in this.pressedKeys ? 1 : 0);
+    const right = ['i', 'j', 'l'].map(key => key in this.pressedKeys ? 1 : 0);
     return {
       left,
       right,
