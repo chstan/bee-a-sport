@@ -64,7 +64,7 @@ class Bee {
     // closest to the wing's current angular position
     function forceForWing(wingLocation, inputsForWing) {
       const controlLocations = [1/6, 3/6, 5/6];
-      let distances = controlLocations.map(l -> {
+      let distances = controlLocations.map(l => {
         const forwardDist = (l - wingLocation) % 1;
         const backwardDist = (wingLocation - l) % 1;
         if (Math.abs(forwardDist) > Math.abs(backwardDist)) {
