@@ -35,6 +35,7 @@ class Game {
         });
 
         this.bindDOM();
+        this.loopCallback = () => this.onLoop();
     }
 
     bindDOM() {
@@ -71,7 +72,16 @@ class Game {
 
       // send information on our bee to the server
       const beeStateForOpponent = this.bee.simpleState;
-      this.socket.emit('state-update', beeStateForOpponent);
+      const pos = _.pick(beeStateForOpponent, ['x', 'y']);
+      if (!_.isEqual(pos, this.lastState)) {
+        this.socket.emit('state-update', beeStateForOpponent);
+      }
+      this.lastState = pos;
+    }
+
+    drawBackground(context, distance) {
+        const TOTAL_DISTANCE = 5200 - window.innerHeight;
+        context.drawImage(this.assets.background, 0, -TOTAL_DISTANCE*distance);
     }
 
     drawAsset(asset, x, y, rot = 0, axisX = 0, axisY = 0, reflect = 1) {
@@ -92,7 +102,7 @@ class Game {
       var context = $canvas[0].getContext('2d');
       context.clearRect(0, 0, $canvas.width(), $canvas.height());
 
-      context.fillStyle = '#FF0000';
+      this.drawBackground(context, this.bee.x);
 
       const BEE_CENTER = - 130;
       const BODY_OFFSET = 93.8;
@@ -125,11 +135,11 @@ class Game {
     onLoop() {
       this.update();
       this.draw();
-      requestAnimationFrame(this.onLoop.bind(this));
+      requestAnimationFrame(this.loopCallback);
     }
 
     start() {
-        this.socket.on('status-update', function (msg) {
+        this.socket.on('status-update', msg => {
           this.opponentBee.updateFromSimpleState(msg);
         });
         this.loadAssets();
@@ -153,15 +163,18 @@ class Game {
                 body: new Image,
                 leftWing: new Image,
                 rightWing: new Image,
-            }
+            },
+            background: new Image,
         };
         this.assets.bee.body.src = '/assets/bee_body.svg';
         this.assets.bee.leftWing.src = '/assets/bee_wing_left.svg';
         this.assets.bee.rightWing.src = '/assets/bee_wing_right.svg';
-        this.loadCount = 3;
+        this.assets.background.src = '/assets/bee_background.svg';
+        this.loadCount = 4;
         this.assets.bee.body.onload = this.assetLoaded;
         this.assets.bee.leftWing.onload = this.assetLoaded;
         this.assets.bee.rightWing.onload = this.assetLoaded;
+        this.assets.background.onload = this.assetLoaded;
     }
 
     assetLoaded() {

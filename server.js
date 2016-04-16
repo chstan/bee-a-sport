@@ -10,7 +10,8 @@ app.use(express.static(__dirname + '/views'));
 app.use('/static', express.static(__dirname + '/static'));
 app.use('/assets', express.static(__dirname + '/assets'));
 
-var games = {};
+var games = {},
+    keys = {};
 
 io.sockets.on('connection', socket => {
     socket.on('register', data => {
@@ -24,9 +25,11 @@ io.sockets.on('connection', socket => {
                     user: data.name,
                     socket,
                 });
+                keys[socket] = data.gamekey;
                 break;
             default:
                 console.log(`Game already full for key ${data.gamekey}`)
+                return;
         }
         if (games[data.gamekey].length === 2) {
             games[data.gamekey].forEach(u => {
@@ -39,10 +42,15 @@ io.sockets.on('connection', socket => {
         console.log('Reseting all games');
         io.emit('reset');
         games = {};
+        keys = {};
     });
 
-    socket.on('move', function(move) {
-        _.without(games[key], socket)[0].socket.emit(move);
+    socket.on('state-update', beeState => {
+        const gamekey = keys[socket];
+        if (!gamekey || games[gamekey].length < 2) return;
+
+        const opponent = _.filter(games[gamekey], g => g.socket !== socket)[0];
+        opponent.socket.emit('state-update', beeState);
     });
 });
 

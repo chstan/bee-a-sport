@@ -2,8 +2,8 @@ class Bee {
   constructor() {
     this.pitch = 0.0; // radians
 
-    this.x = 0;
-    this.y = 0;
+    this.x = initialX;
+    this.y = initialY;
 
     // the wing locations are effectively numbers from
     // 0 to 1, but we record them as continuous floats from
