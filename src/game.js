@@ -95,6 +95,7 @@ class Game {
     context.clearRect(0, 0, $canvas.width(), $canvas.height());
 
     this.drawBackground(context, this.bee.x);
+    context.drawImage(this.assets.avatar, $canvas.width() - 356, $canvas.height() - 387);
 
     const BEE_CENTER = - 130;
     const BODY_OFFSET = 93.8;
@@ -157,16 +158,19 @@ class Game {
         leftWing: new Image,
         rightWing: new Image,
       },
+      avatar: new Image,
       background: new Image,
     };
     this.assets.bee.body.src = '/assets/bee_body.svg';
     this.assets.bee.leftWing.src = '/assets/bee_wing_left.svg';
     this.assets.bee.rightWing.src = '/assets/bee_wing_right.svg';
+    this.assets.avatar.src = '/assets/bee_avatar.png';
     this.assets.background.src = '/assets/bee_background.png';
     this.loadCount = 4;
     this.assets.bee.body.onload = this.assetLoaded;
     this.assets.bee.leftWing.onload = this.assetLoaded;
     this.assets.bee.rightWing.onload = this.assetLoaded;
+    this.assets.avatar.onload = this.assetLoaded;
     this.assets.background.onload = this.assetLoaded;
   }
 
