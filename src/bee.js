@@ -60,7 +60,7 @@ class Bee {
       rightWingLocation: this.rightWingLocation,
       leftWingVelocity: this.leftWingVelocity,
       rightWingVelocity: this.rightWingVelocity,
-      time: getTime(),
+      time: (new Date()).getTime(),
     }
   }
 
