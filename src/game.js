@@ -80,6 +80,11 @@ class Game {
     this.lastState = pos;
   }
 
+  drawBackground(context, distance) {
+    const TOTAL_DISTANCE = 5200 - window.innerHeight;
+    context.drawImage(this.assets.background, 0, -TOTAL_DISTANCE + TOTAL_DISTANCE*distance);
+  }
+
   drawAsset(asset, x, y, rot = 0, axisX = 0, axisY = 0, reflect = 1) {
     var $canvas = $('#game');
     var context = $canvas[0].getContext('2d');
@@ -98,7 +103,7 @@ class Game {
     var context = $canvas[0].getContext('2d');
     context.clearRect(0, 0, $canvas.width(), $canvas.height());
 
-    context.fillStyle = 'yellow';
+    this.drawBackground(context, this.bee.x);
 
     const BEE_CENTER = $canvas.width()/2 - 130;
     const BODY_OFFSET = 93.8;
@@ -127,11 +132,6 @@ class Game {
       -1
     );
 
-    const opState = this.opponentBee.simpleState;
-    context.fillRect(opState.x + 150, opState.y, 100, 100);
-
-    const myState = this.bee.simpleState;
-    context.fillRect(myState.x, myState.y, 100, 100);
   }
 
   onLoop() {
@@ -165,15 +165,18 @@ class Game {
         body: new Image,
         leftWing: new Image,
         rightWing: new Image,
-      }
+      },
+      background: new Image,
     };
     this.assets.bee.body.src = '/assets/bee_body.svg';
     this.assets.bee.leftWing.src = '/assets/bee_wing_left.svg';
     this.assets.bee.rightWing.src = '/assets/bee_wing_right.svg';
-    this.loadCount = 3;
+    this.assets.background.src = '/assets/bee_background.png';
+    this.loadCount = 4;
     this.assets.bee.body.onload = this.assetLoaded;
     this.assets.bee.leftWing.onload = this.assetLoaded;
     this.assets.bee.rightWing.onload = this.assetLoaded;
+    this.assets.background.onload = this.assetLoaded;
   }
 
   assetLoaded() {
