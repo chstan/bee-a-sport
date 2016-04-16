@@ -1,6 +1,6 @@
 class Bee {
   constructor() {
-    this.pitch = 0; // radians
+    this.pitch = 0.0; // radians
 
     this.x = 0;
     this.y = 0;
@@ -40,6 +40,7 @@ class Bee {
       leftWingAngle: angleFromLocation(this.leftWingLocation),
       rightWingAngle: angleFromLocation(this.rightWingLocation),
       pitch: this.pitch,
+      x: this.x,
     }
   }
 
@@ -131,7 +132,17 @@ class Bee {
 
     // TODO calculate wing instability and roll, committing for now
 
-    this.x = (this.leftWingLocation + this.rightWingLocation) / 200;
+    this.pitch = Math.abs(this.leftWingLocation - this.rightWingLocation) - 0.5;
+    if (this.pitch < 0) {
+      this.pitch = 0;
+    }
+    this.pitch /= 5;
+    this.pitch *= this.leftWingLocation < this.rightWingLocation ? -1 : 1;
+
+    const SCALE = 0.5;
+    if (!this.pitch) {
+      this.x += (deltaWingLeft + deltaWingRight) / SCALE;
+    }
   }
 }
 
