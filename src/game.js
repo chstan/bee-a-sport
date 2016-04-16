@@ -55,6 +55,14 @@ class Game {
   }
 
   update() {
+    if (this.bee.x >= 100) {
+        this.bee.win = true;
+        return;
+    }
+    if (Math.abs(this.bee.pitch) >= Math.PI/2) {
+        this.bee.lose = true;
+        return;
+    }
     // update our bee
     this.lastFrame = this.lastFrame || (new Date()).getTime();
     const currentFrame = (new Date()).getTime();
@@ -73,7 +81,7 @@ class Game {
 
   drawBackground(context, distance) {
     const TOTAL_DISTANCE = 5200 - window.innerHeight;
-    context.drawImage(this.assets.background, 0, -TOTAL_DISTANCE + TOTAL_DISTANCE*(distance/100));
+    context.drawImage(this.assets.background, 0, Math.min(-TOTAL_DISTANCE + TOTAL_DISTANCE*(distance/100), 0));
   }
 
   drawAsset(asset, x, y, rot = 0, axisX = 0, axisY = 0, reflect = 1) {
@@ -124,6 +132,13 @@ class Game {
     );
     context.rotate(-pitch);
     context.translate(-$canvas.width()/2, -$canvas.width()/2);
+    context.font = '50px Comic Sans MS';
+    context.textAlign = 'center';
+    if (this.bee.lose) {
+        context.fillText("You Lose", $canvas.width()/2, $canvas.height()/2);
+    } else if (this.bee.win) {
+        context.fillText("You Win", $canvas.width()/2, $canvas.height()/2);
+    }
   }
 
   onLoop() {

@@ -22,6 +22,10 @@ class Bee {
     this.leftWingHistory = [];
     this.rightWingHistory = [];
     this.timestamps = [];
+
+    // detect if the user has won or lost
+    this.win = false;
+    this.lose = false;
   }
 
   drawData() {
