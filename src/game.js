@@ -66,6 +66,7 @@ class Game {
       this.lastFrame = this.lastFrame || (new Date()).getTime();
       const currentFrame = (new Date()).getTime();
       const inputs = this.controls.controlsForBee;
+      console.log(inputs.left);
       this.bee.nextFrameFromControls(inputs, currentFrame - this.lastFrame);
       this.lastFrame = currentFrame;
 
@@ -102,6 +103,7 @@ class Game {
       const {
         leftWingAngle, rightWingAngle
       } = this.bee.drawData();
+      console.log(this.bee.simpleState);
 
       // draw rotated wings
       const TEST_ROTATION = ((new Date()).getTime() % 2000) / 2000;
