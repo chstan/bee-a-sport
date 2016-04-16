@@ -13,10 +13,12 @@
     "webpack": "^1.13.0"
   },
   "dependencies": {
-    "pug": "^2.0.0-alpha3"
+    "express": "^4.13.4",
+    "pug": "^2.0.0-alpha3",
+    "socket.io": "^1.4.5"
   },
   "scripts": {
-      "start": "webpack && node server.js",
-      "watch": "webpack --watch && nodemon -w server.js -I -q server.js"
+    "start": "webpack && node server.js",
+    "watch": "webpack --watch && nodemon -w server.js -I -q server.js"
   }
 }
