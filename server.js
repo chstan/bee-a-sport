@@ -6,10 +6,8 @@ var _ = require('lodash');
 
 var runningPortNumber = process.env.PORT || 8080;
 
-app.configure(function(){
-    app.use(express.static(__dirname + '/views'));
-    app.use('/static', express.static(__dirname + '/static'));
-});
+app.use(express.static(__dirname + '/views'));
+app.use('/static', express.static(__dirname + '/static'));
 
 var games = {};
 
