@@ -1,7 +1,19 @@
-class HelloWorld {
+import io from 'socket.io-client';
+import $ from 'jquery';
+
+class Game {
     constructor() {
-        console.log('It still works!');
+        this.socket = io.connect('http://localhost:8080');
+    }
+
+    register() {
+        this.socket.emit('register', 123);
     }
 }
 
-new HelloWorld
+$(document).ready(() => {
+    var game = new Game;
+    $('#register-button').click(() => {
+        game.register();
+    });
+});
