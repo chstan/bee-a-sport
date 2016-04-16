@@ -2,6 +2,19 @@ import io from 'socket.io-client';
 import Bee from './bee';
 import ControlsListener from './controls';
 import $ from 'jquery';
+import _ from 'lodash';
+
+var GameState = {
+    SETUP: 'SETUP',
+    WAITING: 'WAITING',
+    STARTED: 'STARTED',
+};
+
+function log(message) {
+    $('#debug').append(
+        $('<li>').text(message)
+    );
+}
 
 class Game {
     constructor() {
@@ -10,10 +23,42 @@ class Game {
         this.bee = new Bee();
         this.opponentBee = new Bee();
         this.lastFrame = null;
+        this.state = GameState.SETUP;
+
+        this.socket.on('start', () => {
+            log('Starting');
+            this.state = GameState.STARTED;
+        });
+
+        this.socket.on('reset', () => {
+            this.reset();
+        });
+
+        this.bindDOM();
     }
 
-    register() {
-      this.socket.emit('register', 123);
+    bindDOM() {
+        $('#player-info').submit(e => {
+            e.preventDefault();
+            var $form = $(e.target);
+            var data = _.reduce(
+                $form.serializeArray(),
+                (acc, input) => {
+                    acc[input.name] = input.value
+                    return acc;
+                },
+                {}
+            );
+            $form.find('input[name="gamekey"]').val('');
+            $form.find('input[name="name"]').val('');
+
+            this.register(data);
+        });
+
+        $('#reset').click(() => {
+            log('Sending reset');
+            this.socket.emit('reset');
+        });
     }
 
     update() {
@@ -86,13 +131,24 @@ class Game {
         this.loadCount -= 1;
     }
 
+    register(data) {
+        if (this.state !== GameState.SETUP) {
+            log('Already registered');
+            return;
+        }
+
+        log('Registering');
+        this.socket.emit('register', data);
+        this.state = GameState.WAITING;
+    }
+
+    reset() {
+        log('Reseting');
+        this.state = GameState.SETUP;
+    }
 }
 
 $(document).ready(() => {
     var game = new Game;
-    $('#register-button').click(() => {
-        game.register();
-    });
-
     game.start();
 });
