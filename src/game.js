@@ -10,12 +10,6 @@ var GameState = {
   STARTED: 'STARTED',
 };
 
-function log(message) {
-  $('#debug').append(
-    $('<li>').text(message)
-  );
-}
-
 class Game {
   constructor() {
     this.socket = io.connect('http://localhost:8080');
@@ -26,7 +20,6 @@ class Game {
     this.state = GameState.SETUP;
 
     this.socket.on('start', () => {
-      log('Starting');
       this.state = GameState.STARTED;
     });
 
@@ -50,14 +43,13 @@ class Game {
         },
         {}
       );
-      $form.find('input[name="gamekey"]').val('');
-      $form.find('input[name="name"]').val('');
+      $('#modal-dim').hide();
+      $('#start-modal').hide();
 
       this.register(data);
     });
 
     $('#reset').click(() => {
-      log('Sending reset');
       this.socket.emit('reset');
     });
   }
@@ -110,7 +102,6 @@ class Game {
     const {
       leftWingAngle, rightWingAngle, pitch, x
     } = this.bee.drawData();
-    console.log(x);
 
     context.translate($canvas.width()/2, $canvas.width()/2);
     context.rotate(pitch);
@@ -185,17 +176,14 @@ class Game {
 
   register(data) {
     if (this.state !== GameState.SETUP) {
-      log('Already registered');
       return;
     }
 
-    log('Registering');
     this.socket.emit('register', data);
     this.state = GameState.WAITING;
   }
 
   reset() {
-    log('Reseting');
     this.state = GameState.SETUP;
   }
 }

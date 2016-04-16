@@ -8,24 +8,26 @@
     <title>Bee: A Sport</title>
   </head>
   <body>
-    <h1>Welcome to Bee: A Sport</h1>
-    <h3>
+    <canvas id="game" width="800px" height="600px"></canvas>
+    <button type="button" id="reset">Reset games</button>
+    <div id="modal-dim"></div>
+    <div id="start-modal">
+      <h1>Welcome to Bee: A Sport</h1>
+      <p>
       Play Bee: A sport, a new racing sport involving bees flying over an island.
       Race to beat your friends to the finish line.
       First one to the other side wins!
-    </h3>
-    <form id="player-info">
-      <input name="name" placeholder="Enter your name" />
-      <select name="character">
-        <option value="Bobby">Bobby</option>
-      </select>
-      <input name="gamekey" placeholder="Enter a key for your game" />
-      <button type="submit">Start Playing</button>
-    </form>
-    <canvas id="game" width="800px" height="600px"></canvas>
-    <button type="button" id="reset">Reset games</button>
-    <ul id="debug">
-    </ul>
+      </p>
+      <form id="player-info">
+        <h2>Enter a code to play with a friend</h2>
+        <div class="input-group">
+          <input name="gamekey" />
+        </div>
+        <div class="input-group button-group">
+          <button type="submit">Connect</button>
+        </div>
+      </form>
+    </div>
     <footer>
       <ul>
         <li><a href="/why.html">Why?</a></li>
