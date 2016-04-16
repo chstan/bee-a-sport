@@ -84,25 +84,25 @@ class Bee {
     // the wings keep moving for a little while after you stop flapping,
     // but you can keep them at maximum speed by holding the button that's
     // closest to the wing's current angular position
+    function distance(controlLocation, wingLocation) {
+      let distance = (wingLocation - controlLocation) % 1;
+      if (distance > 0.5) distance -= 1;
+      return distance;
+    }
+
     function forceForWing(wingLocation, inputsForWing) {
       const controlLocations = [1/6, 3/6, 5/6];
-      let distances = controlLocations.map(l => {
-        const forwardDist = (l - wingLocation) % 1;
-        const backwardDist = (wingLocation - l) % 1;
-        if (Math.abs(forwardDist) > Math.abs(backwardDist)) {
-          return backwardDist;
-        }
-        return forwardDist;
-      });
+      let distances = controlLocations.map(l => distance(l, wingLocation));
 
       // make it so that you can hold the buttons down slightly past the control
       // points
-      const kindness = 0.03;
+      const kindness = 0.2;
       distances = distances.map(d => Math.abs(d) < kindness ? Math.abs(d) : d);
       let force = 0;
       for (let i = 0; i < 3; i++) {
         if (inputsForWing[i]) {
-          force += (1 - distances[i]);
+          const contrib = (1 - Math.abs(distances[i]));
+          force += distances[i] > 0 ? contrib : -contrib;
         }
       }
 
