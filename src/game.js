@@ -67,7 +67,9 @@ class Game {
     this.lastFrame = this.lastFrame || (new Date()).getTime();
     const currentFrame = (new Date()).getTime();
     const inputs = this.controls.controlsForBee;
-    this.bee.nextFrameFromControls(inputs, currentFrame - this.lastFrame);
+    if (this.state === GameState.STARTED) {
+      this.bee.nextFrameFromControls(inputs, currentFrame - this.lastFrame);
+    }
     this.lastFrame = currentFrame;
 
     // send information on our bee to the server
