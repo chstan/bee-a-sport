@@ -81,7 +81,7 @@ class Game {
 
   drawBackground(context, distance) {
     const TOTAL_DISTANCE = 5200 - window.innerHeight;
-    context.drawImage(this.assets.background, 0, -TOTAL_DISTANCE*distance);
+    context.drawImage(this.assets.background, 0, -TOTAL_DISTANCE + TOTAL_DISTANCE*distance);
   }
 
   drawAsset(asset, x, y, rot = 0, axisX = 0, axisY = 0, reflect = 1) {
@@ -171,7 +171,7 @@ class Game {
     this.assets.bee.body.src = '/assets/bee_body.svg';
     this.assets.bee.leftWing.src = '/assets/bee_wing_left.svg';
     this.assets.bee.rightWing.src = '/assets/bee_wing_right.svg';
-    this.assets.background.src = '/assets/bee_background.svg';
+    this.assets.background.src = '/assets/bee_background.png';
     this.loadCount = 4;
     this.assets.bee.body.onload = this.assetLoaded;
     this.assets.bee.leftWing.onload = this.assetLoaded;
