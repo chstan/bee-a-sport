@@ -14,7 +14,7 @@
       Race to beat your friends to the finish line.
       First one to the other side wins!
     </h3>
-    <form id="player info" method="POST" action="/start">
+    <form id="player-info">
       <input name="name" placeholder="Enter your name" />
       <select name="character">
         <option value="Bobby">Bobby</option>
@@ -23,6 +23,9 @@
       <button type="submit">Start Playing</button>
     </form>
     <canvas id="game" width="800px" height="600px"></canvas>
+    <button type="button" id="reset">Reset games</button>
+    <ul id="debug">
+    </ul>
     <footer>
       <ul>
         <li><a href="/why.html">Why?</a></li>

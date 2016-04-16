@@ -12,15 +12,37 @@ app.use('/assets', express.static(__dirname + '/assets'));
 
 var games = {};
 
-io.sockets.on('connection', function (socket) {
-    socket.on('register', function(key) {
-        if (_.size(players[key]) < 2) {
-            players[key].push(socket);
+io.sockets.on('connection', socket => {
+    socket.on('register', data => {
+        console.log(`Received registration ${JSON.stringify(data)}`);
+        switch (_.size(games[data.gamekey])) {
+            case 0:
+                games[data.gamekey] = [];
+                /* FALL-THROUGH */
+            case 1:
+                games[data.gamekey].push({
+                    user: data.name,
+                    socket,
+                });
+                break;
+            default:
+                console.log(`Game already full for key ${data.gamekey}`)
+        }
+        if (games[data.gamekey].length === 2) {
+            games[data.gamekey].forEach(u => {
+                u.socket.emit('start');
+            });
         }
     });
 
+    socket.on('reset', () => {
+        console.log('Reseting all games');
+        io.emit('reset');
+        games = {};
+    });
+
     socket.on('move', function(move) {
-        _.without(players[key], socket)[0].emit(move);
+        _.without(games[key], socket)[0].socket.emit(move);
     });
 });
 
