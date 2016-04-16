@@ -1,5 +1,5 @@
 class Bee {
-  constructor() {
+  constructor(initialX = 0, initialY = 0) {
     this.pitch = 0.0; // radians
 
     this.x = initialX;

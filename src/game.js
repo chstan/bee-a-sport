@@ -81,7 +81,7 @@ class Game {
 
   drawBackground(context, distance) {
     const TOTAL_DISTANCE = 5200 - window.innerHeight;
-    context.drawImage(this.assets.background, 0, -TOTAL_DISTANCE + TOTAL_DISTANCE*distance);
+    context.drawImage(this.assets.background, 0, -TOTAL_DISTANCE + TOTAL_DISTANCE*(distance/100));
   }
 
   drawAsset(asset, x, y, rot = 0, axisX = 0, axisY = 0, reflect = 1) {
