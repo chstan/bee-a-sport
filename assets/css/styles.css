@@ -1,5 +1,17 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: 'Roboto', sans-serif;
+  background-color: rgb(120, 168, 122);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #big-msg {
@@ -81,11 +93,13 @@ body {
 
 footer {
   height: 80px;
-  background-color: #DDDDDD;
+  background-color: rgb(78, 111, 80);
 
   ul {
     list-style: none;
     li {
+      font-weight: 500;
+      color: white;
       display: inline-block;
       margin: 8px;
     }

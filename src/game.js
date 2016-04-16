@@ -63,6 +63,14 @@ class Game {
   }
 
   update() {
+    if (this.bee.x >= 100) {
+        this.bee.win = true;
+        return;
+    }
+    if (Math.abs(this.bee.pitch) >= Math.PI/2) {
+        this.bee.lose = true;
+        return;
+    }
     // update our bee
     this.lastFrame = this.lastFrame || (new Date()).getTime();
     const currentFrame = (new Date()).getTime();
@@ -82,7 +90,7 @@ class Game {
 
   drawBackground(context, distance) {
     const TOTAL_DISTANCE = 5200 - window.innerHeight;
-    context.drawImage(this.assets.background, 0, -TOTAL_DISTANCE + TOTAL_DISTANCE*(distance/100));
+    context.drawImage(this.assets.background, 0, Math.min(-TOTAL_DISTANCE + TOTAL_DISTANCE*(distance/100), 0));
   }
 
   drawAsset(asset, x, y, rot = 0, axisX = 0, axisY = 0, reflect = 1) {
@@ -104,6 +112,7 @@ class Game {
     context.clearRect(0, 0, $canvas.width(), $canvas.height());
 
     this.drawBackground(context, this.bee.x);
+    context.drawImage(this.assets.avatar, $canvas.width() - 356, $canvas.height() - 387);
 
     const BEE_CENTER = - 130;
     const BODY_OFFSET = 93.8;
@@ -131,6 +140,13 @@ class Game {
     );
     context.rotate(-pitch);
     context.translate(-$canvas.width()/2, -$canvas.width()/2);
+    context.font = '50px Comic Sans MS';
+    context.textAlign = 'center';
+    if (this.bee.lose) {
+        context.fillText("You Lose", $canvas.width()/2, $canvas.height()/2);
+    } else if (this.bee.win) {
+        context.fillText("You Win", $canvas.width()/2, $canvas.height()/2);
+    }
 
     const BEE_START_X = 44;
     const BEE_END_X = 424;
@@ -175,6 +191,7 @@ class Game {
         leftWing: new Image,
         rightWing: new Image,
       },
+      avatar: new Image,
       background: new Image,
       indicatorBar: new Image,
       indicatorMe: new Image,
@@ -183,6 +200,7 @@ class Game {
     this.assets.bee.body.src = '/assets/bee_body.svg';
     this.assets.bee.leftWing.src = '/assets/bee_wing_left.svg';
     this.assets.bee.rightWing.src = '/assets/bee_wing_right.svg';
+    this.assets.avatar.src = '/assets/bee_avatar.png';
     this.assets.background.src = '/assets/bee_background.png';
     this.assets.indicatorBar.src = '/assets/indicator_bar.png';
     this.assets.indicatorMe.src = '/assets/indicator_yellow.svg';
