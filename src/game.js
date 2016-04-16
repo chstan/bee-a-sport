@@ -18,8 +18,8 @@ class Game {
 
     update() {
       // update our bee
-      this.lastFrame = this.lastFrame || getTime();
-      const currentFrame = getTime();
+      this.lastFrame = this.lastFrame || (new Date()).getTime();
+      const currentFrame = (new Date()).getTime();
       const inputs = this.controls.controlsForBee;
       this.bee.nextFrameFromControls(inputs, currentFrame - lastFrame);
       this.lastFrame = currentFrame;
@@ -31,6 +31,9 @@ class Game {
 
     draw() {
       // TODO
+      var $canvas = $('#game');
+      var context = $canvas[0].getContext('2d');
+      context.fillStyle = '#FF0000';
 
       context.drawImage(this.assets.bee.body, 300, 300);
       context.drawImage(this.assets.bee.leftWing, 225, 350);
@@ -45,24 +48,23 @@ class Game {
     }
 
     start() {
-        var $canvas = $('#game');
-        var context = $canvas[0].getContext('2d');
         this.socket.on('status-update', function (msg) {
           this.opponentBee.updateFromSimpleState(msg);
         });
-        context.fillStyle = '#FF0000';
         this.loadAssets();
-        window.addEventListener('resize', resizeCanvas, false);
 
-        function resizeCanvas() {
-            $canvas[0].width = window.innerWidth;
-            $canvas[0].height = window.innerHeight;
-            this.update();
-        }
-        resizeCanvas();
+        window.addEventListener('resize', this.resizeCanvas, false);
+        this.resizeCanvas();
 
 
         this.onLoop();
+    }
+
+    resizeCanvas() {
+        var $canvas = $('#game');
+        $canvas[0].width = window.innerWidth;
+        $canvas[0].height = window.innerHeight;
+        this.draw();
     }
 
     loadAssets() {
