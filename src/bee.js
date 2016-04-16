@@ -22,6 +22,27 @@ class Bee {
     this.timestamps = [];
   }
 
+  drawData() {
+    const ANGLE_MAX = Math.PI / 4; // TODO tune these
+    const ANGLE_MIN = -Math.PI / 4;
+
+    function angleFromLocation(location) {
+      const l = location % l;
+      if (l < 0.5) {
+        return (l * 2) * ANGLE_MAX + (1 - (l * 2)) * ANGLE_MIN;
+      } else {
+        l -= 0.5;
+        return (l * 2) * ANGLE_MIN + (1 - (l * 2)) * ANGLE_MAX;
+      }
+    }
+
+    return {
+      leftWingAngle: angleFromLocation(this.leftWingLocation),
+      rightWingAngle: angleFromLocation(this.rightWingLocation),
+      pitch: this.pitch,
+    }
+  }
+
   get instability() {
     // TODO
   }
