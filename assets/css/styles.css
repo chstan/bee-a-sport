@@ -2,6 +2,75 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
+#modal-dim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+#start-modal {
+  position: absolute;
+  z-index: 1;
+  box-sizing: border-box;
+  text-align: center;
+
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 500px;
+  height: 400px;
+
+  padding-top: 25px;
+  box-shadow: 5px 5px 5px 0;
+  background-color: #ccc;
+}
+
+#start-modal h2 {
+  width: 100%;
+  margin-top: 32px;
+}
+
+#start-modal p {
+  text-align: left;
+  padding: 0 32px;
+}
+
+#start-modal .input-group {
+  width: 100%;
+  margin-top: 16px;
+}
+
+#start-modal input {
+  display: block;
+  margin: 0 auto;
+
+  text-align: center;
+  width: 80%;
+  height: 2em;
+  font-size: 1.5em;
+}
+
+#start-modal .button-group {
+  text-align: right;
+  position: absolute;
+  bottom: 16px;
+}
+
+#start-modal button {
+  width: 100px;
+  height: 2em;
+  font-size: 1.25em;
+  margin-right: 25px;
+
+  border-radius: 5px;
+  border: 2px solid #9F5B24;
+  background-color: #E1CDA5;
+}
+
 footer {
   height: 80px;
   background-color: #DDDDDD;

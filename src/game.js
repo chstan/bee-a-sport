@@ -43,8 +43,8 @@ class Game {
         },
         {}
       );
-      $form.find('input[name="gamekey"]').val('');
-      $form.find('input[name="name"]').val('');
+      $('#modal-dim').hide();
+      $('#start-modal').hide();
 
       this.register(data);
     });
