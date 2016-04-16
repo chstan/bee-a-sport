@@ -24,7 +24,7 @@ class Game {
         $msg.show();
         setTimeout(() => {
             $msg.hide();
-        }, 250);
+        }, 400);
         this.state = GameState.STARTED;
     });
 
@@ -34,9 +34,6 @@ class Game {
 
     this.bindDOM();
     this.loopCallback = () => this.onLoop();
-    this.register({
-        gamekey: 1
-    })
   }
 
   bindDOM() {

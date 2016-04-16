@@ -57,7 +57,7 @@ var games = {},
 
     socket.on('disconnect', () => {
         const gamekey = keys[socket]
-        const players = games[gamekey];
+        const players = games[gamekey] || [];
         players.forEach(p => {
             delete keys[p.socket];
         });
