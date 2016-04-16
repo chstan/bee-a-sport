@@ -24,7 +24,7 @@ class Game {
         $msg.show();
         setTimeout(() => {
             $msg.hide();
-        }, 400);
+        }, 1000);
         this.state = GameState.STARTED;
     });
 
