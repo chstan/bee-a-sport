@@ -12,7 +12,7 @@ var GameState = {
 
 class Game {
   constructor() {
-    this.socket = io.connect('http://localhost:8080');
+    this.socket = io.connect(window.location.href);
     this.controls = new ControlsListener();
     this.bee = new Bee();
     this.opponentBee = new Bee();
