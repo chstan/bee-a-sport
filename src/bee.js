@@ -27,7 +27,7 @@ class Bee {
     const ANGLE_MIN = -Math.PI / 4;
 
     function angleFromLocation(location) {
-      let l = location % l;
+      let l = location % 1;
       if (l < 0.5) {
         return (l * 2) * ANGLE_MAX + (1 - (l * 2)) * ANGLE_MIN;
       } else {

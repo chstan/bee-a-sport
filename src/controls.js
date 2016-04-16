@@ -12,13 +12,13 @@ class ControlsListener {
         const keyName = e.code.replace('Key', '').toLowerCase();
         this.pressedKeys.add(keyName);
       } catch (e) {}
-    }, false);
+    }.bind(this), false);
     window.addEventListener('keyup', function (e) {
       try {
         const keyName = e.code.replace('Key', '').toLowerCase();
         this.pressedKeys.delete(keyName);
       } catch (e) {}
-    }, false);
+    }.bind(this), false);
   }
 
   get controlsForBee() {

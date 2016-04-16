@@ -98,9 +98,8 @@ class Game {
         });
         this.loadAssets();
 
-        window.addEventListener('resize', this.resizeCanvas, false);
+        window.addEventListener('resize', this.resizeCanvas.bind(this), false);
         this.resizeCanvas();
-
 
         this.onLoop();
     }
@@ -151,6 +150,6 @@ class Game {
 }
 
 $(document).ready(() => {
-    var game = new Game;
+    var game = new Game();
     game.start();
 });
