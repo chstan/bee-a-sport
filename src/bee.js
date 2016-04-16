@@ -96,7 +96,7 @@ class Bee {
 
       // make it so that you can hold the buttons down slightly past the control
       // points
-      const kindness = 0.1;
+      const kindness = 0.03;
       distances = distances.map(d => Math.abs(d) < kindness ? Math.abs(d) : d);
       let force = 0;
       for (let i = 0; i < 3; i++) {
@@ -105,7 +105,7 @@ class Bee {
         }
       }
 
-      return force;
+      return force * frameDuration / 50000;
     }
 
     // all of this should take into account framerate
@@ -118,9 +118,9 @@ class Bee {
       forceForWing(this.rightWingLocation, inputs.right) / WING_INERTIA
     );
 
-    const WING_EASING = 0.02;
-    leftWingV *= 0.98; // this should take into account framerate
-    rightWingV *= 0.98;
+    const WING_EASING = 0.05;
+    leftWingV *= (1- WING_EASING); // this should take into account framerate
+    rightWingV *= (1 - WING_EASING);
 
     const deltaWingLeft = (this.leftWingVelocity + leftWingV) * frameDuration / 2;
     const deltaWingRight = (this.rightWingVelocity + rightWingV) * frameDuration / 2;
@@ -130,6 +130,8 @@ class Bee {
     this.rightWingLocation += deltaWingRight;
 
     // TODO calculate wing instability and roll, committing for now
+
+    this.x = (this.leftWingLocation + this.rightWingLocation) / 200;
   }
 }
 

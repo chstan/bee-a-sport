@@ -67,6 +67,7 @@ class Game {
     this.lastFrame = this.lastFrame || (new Date()).getTime();
     const currentFrame = (new Date()).getTime();
     const inputs = this.controls.controlsForBee;
+    console.log(inputs.left);
     this.bee.nextFrameFromControls(inputs, currentFrame - this.lastFrame);
     this.lastFrame = currentFrame;
 
@@ -79,18 +80,53 @@ class Game {
     this.lastState = pos;
   }
 
-  draw() {
-    // TODO
+  drawAsset(asset, x, y, rot = 0, axisX = 0, axisY = 0, reflect = 1) {
     var $canvas = $('#game');
     var context = $canvas[0].getContext('2d');
+
+    context.translate(x, y);
+    context.rotate(rot);
+    context.scale(reflect, 1);
+    context.drawImage(asset, -axisX, -axisY);
+    context.scale(reflect, 1);
+    context.rotate(-rot);
+    context.translate(-x, -y);
+  }
+
+  draw() {
+    var $canvas = $('#game');
+    var context = $canvas[0].getContext('2d');
+    context.clearRect(0, 0, $canvas.width(), $canvas.height());
+
     context.fillStyle = 'yellow';
 
-    /*
-       context.drawImage(this.assets.bee.body, 300, 300);
-       context.drawImage(this.assets.bee.leftWing, 225, 350);
-       context.drawImage(this.assets.bee.rightWing, 450, 350);
-       */
-    context.clearRect(0, 0, $canvas.width(), $canvas.height());
+    const BEE_CENTER = $canvas.width()/2 - 130;
+    const BODY_OFFSET = 93.8;
+
+    this.drawAsset(this.assets.bee.body, BEE_CENTER, BEE_CENTER);
+
+    const {
+      leftWingAngle, rightWingAngle
+    } = this.bee.drawData();
+    console.log(this.bee.simpleState);
+
+    // draw rotated wings
+    const TEST_ROTATION = ((new Date()).getTime() % 2000) / 2000;
+    const ROT_OFFSET = 0; // Tune this
+    const AXIS = 90;
+    this.drawAsset(
+      this.assets.bee.leftWing, $canvas.width()/2, $canvas.width()/2,
+      leftWingAngle + ROT_OFFSET,
+      BODY_OFFSET + 130, BODY_OFFSET + 130
+    );
+
+    this.drawAsset(
+      this.assets.bee.leftWing, $canvas.width()/2, $canvas.width()/2,
+      -(rightWingAngle + ROT_OFFSET),
+      BODY_OFFSET + 130, BODY_OFFSET + 130,
+      -1
+    );
+
     const opState = this.opponentBee.simpleState;
     context.fillRect(opState.x + 150, opState.y, 100, 100);
 
