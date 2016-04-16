@@ -15,36 +15,29 @@ var games = {},
 
 io.sockets.on('connection', socket => {
   socket.on('register', data => {
-    console.log(`Received registration ${JSON.stringify(data)}`);
+    console.log(`Received registration for game ${data.gamekey}`);
     switch (_.size(games[data.gamekey])) {
         case 0:
             games[data.gamekey] = [];
             /* FALL-THROUGH */
         case 1:
             games[data.gamekey].push({
-              user: data.name,
               socket,
             });
             keys[socket] = data.gamekey;
             break;
         default:
-            console.log(`Game already full for key ${data.gamekey}`)
+            console.log(`Game ${data.gamekey} is full.`)
             return;
     }
     if (games[data.gamekey].length === 2) {
-        setTimeout(() => {
-          games[data.gamekey].forEach(u => {
-              u.socket.emit('start');
-          });
-        }, 500);
+      console.log(`Starting game ${data.gamekey}`);
+      setTimeout(() => {
+        games[data.gamekey].forEach(u => {
+            u.socket.emit('start');
+        });
+      }, 500);
     }
-  });
-
-  socket.on('reset', () => {
-    console.log('Reseting all games');
-    io.emit('reset');
-    games = {};
-    keys = {};
   });
 
   socket.on('state-update', beeState => {
@@ -56,7 +49,7 @@ io.sockets.on('connection', socket => {
   });
 
   socket.on('disconnect', () => {
-      const gamekey = keys[socket]
+      const gamekey = keys[socket];
       const players = games[gamekey] || [];
       players.forEach(p => {
           delete keys[p.socket];
