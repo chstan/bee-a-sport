@@ -43,7 +43,7 @@ class Bee {
     }
   }
 
-  set fromSimpleState(state) {
+  updateFromSimpleState(state) {
     this.pitch = state.pitch;
     this.x = state.x;
     this.y = state.y;
