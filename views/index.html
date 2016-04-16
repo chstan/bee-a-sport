@@ -7,6 +7,15 @@
   </head>
   <body>
     <h1>Welcome to Bee: A Sport</h1>
+    <h3>Play Bee: A sport, a new racing sport involving bees flying over an island.  Race to beat your friends to the finish line.  First one to the other side wins!</h3>
+    <form id="player info" method="POST" action="/start">
+      <input name="name" placeholder="Enter your name" />
+      <select name="character">
+        <option value="Bobby">Bobby</option>
+      </select>
+      <input name="gamekey" placeholder="Enter a key for your game" />
+      <button type="submit">Start Playing</button>
+    </form>
     <script src="static/app.dist.js" type="text/javascript"></script>
   </body>
 </html>

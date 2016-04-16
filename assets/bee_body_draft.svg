@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="200px" height="260px" viewBox="0 0 200 260" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.7 (28169) - http://www.bohemiancoding.com/sketch -->
+    <title>Page 1</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0 260 100 260 100 130.0002 100 0.0004 0 0.0004"></polygon>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g>
+            <path d="M200,100 C200,44.771 155.228,0 100,0 C44.771,0 0,44.771 0,100 C0,114.763 3.202,128.777 8.944,141.39 L8.943,141.391 L44.314,222.372 L44.327,222.37 C53.197,244.424 74.773,260 100,260 C125.227,260 146.803,244.424 155.673,222.37 L155.686,222.372 L191.057,141.391 L191.056,141.39 C196.798,128.777 200,114.763 200,100" id="Fill-1" fill="#FFC565"></path>
+            <g id="Group-5" transform="translate(100.000000, 0.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Clip-4"></g>
+                <path d="M55.673,222.3704 L55.686,222.3714 L91.057,141.3914 L91.056,141.3904 C96.798,128.7774 100,114.7634 100,100.0004 C100,44.7714 55.228,0.0004 0,0.0004 L0,260.0004 C25.227,260.0004 46.803,244.4234 55.673,222.3704" id="Fill-3" fill-opacity="0.05" fill="#000000" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+</svg>
