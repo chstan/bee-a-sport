@@ -111,3 +111,5 @@ class Bee {
     // TODO calculate wing instability and roll, committing for now
   }
 }
+
+export default Bee;
