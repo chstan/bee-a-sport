@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
-import Bee from 'bee';
-import ControlsListener from 'controls';
+import Bee from './bee';
+import ControlsListener from './controls';
 import $ from 'jquery';
 
 class Game {
@@ -31,6 +31,11 @@ class Game {
 
     draw() {
       // TODO
+
+      context.drawImage(this.assets.bee.body, 300, 300);
+      context.drawImage(this.assets.bee.leftWing, 225, 350);
+      context.drawImage(this.assets.bee.rightWing, 450, 350);
+
     }
 
     onLoop() {
@@ -47,6 +52,15 @@ class Game {
         });
         context.fillStyle = '#FF0000';
         this.loadAssets();
+        window.addEventListener('resize', resizeCanvas, false);
+
+        function resizeCanvas() {
+            $canvas[0].width = window.innerWidth;
+            $canvas[0].height = window.innerHeight;
+            this.update();
+        }
+        resizeCanvas();
+
 
         this.onLoop();
     }
@@ -59,9 +73,9 @@ class Game {
                 rightWing: new Image,
             }
         };
-        this.assets.bee.body.src = '/assets/bee_body_draft.svg';
-        this.assets.bee.leftWing.src = '/assets/bee_wing_left_draft.svg';
-        this.assets.bee.rightWing.src = '/assets/bee_wing_right_draft.svg';
+        this.assets.bee.body.src = '/assets/bee_body.svg';
+        this.assets.bee.leftWing.src = '/assets/bee_wing_left.svg';
+        this.assets.bee.rightWing.src = '/assets/bee_wing_right.svg';
         this.loadCount = 3;
         this.assets.bee.body.onload = this.assetLoaded;
         this.assets.bee.leftWing.onload = this.assetLoaded;

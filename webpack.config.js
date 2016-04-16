@@ -1,5 +1,5 @@
 module.exports = {
-    entry  : './src/index.js',
+    entry  : './src/game.js',
     output : {
         path     : './static',
         filename : 'app.dist.js'
