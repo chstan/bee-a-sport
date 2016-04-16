@@ -20,8 +20,8 @@ class Game {
   constructor() {
     this.socket = io.connect('http://localhost:8080');
     this.controls = new ControlsListener();
-    this.bee = new Bee(50, 50);
-    this.opponentBee = new Bee(50, 50);
+    this.bee = new Bee();
+    this.opponentBee = new Bee();
     this.lastFrame = null;
     this.state = GameState.SETUP;
 
@@ -67,7 +67,6 @@ class Game {
     this.lastFrame = this.lastFrame || (new Date()).getTime();
     const currentFrame = (new Date()).getTime();
     const inputs = this.controls.controlsForBee;
-    console.log(inputs.left);
     this.bee.nextFrameFromControls(inputs, currentFrame - this.lastFrame);
     this.lastFrame = currentFrame;
 
@@ -105,33 +104,34 @@ class Game {
 
     this.drawBackground(context, this.bee.x);
 
-    const BEE_CENTER = $canvas.width()/2 - 130;
+    const BEE_CENTER = - 130;
     const BODY_OFFSET = 93.8;
 
-    this.drawAsset(this.assets.bee.body, BEE_CENTER, BEE_CENTER);
-
     const {
-      leftWingAngle, rightWingAngle
+      leftWingAngle, rightWingAngle, pitch, x
     } = this.bee.drawData();
-    console.log(this.bee.simpleState);
+    console.log(x);
 
+    context.translate($canvas.width()/2, $canvas.width()/2);
+    context.rotate(pitch);
     // draw rotated wings
     const TEST_ROTATION = ((new Date()).getTime() % 2000) / 2000;
     const ROT_OFFSET = 0; // Tune this
     const AXIS = 90;
+    this.drawAsset(this.assets.bee.body, BEE_CENTER, BEE_CENTER);
     this.drawAsset(
-      this.assets.bee.leftWing, $canvas.width()/2, $canvas.width()/2,
-      leftWingAngle + ROT_OFFSET,
-      BODY_OFFSET + 130, BODY_OFFSET + 130
+        this.assets.bee.leftWing, 0, 0,
+        leftWingAngle + ROT_OFFSET,
+        BODY_OFFSET + 130, BODY_OFFSET + 130
     );
-
     this.drawAsset(
-      this.assets.bee.leftWing, $canvas.width()/2, $canvas.width()/2,
-      -(rightWingAngle + ROT_OFFSET),
-      BODY_OFFSET + 130, BODY_OFFSET + 130,
-      -1
+        this.assets.bee.leftWing, 0, 0,
+        -(rightWingAngle + ROT_OFFSET),
+        BODY_OFFSET + 130, BODY_OFFSET + 130,
+        -1
     );
-
+    context.rotate(-pitch);
+    context.translate(-$canvas.width()/2, -$canvas.width()/2);
   }
 
   onLoop() {
@@ -141,7 +141,7 @@ class Game {
   }
 
   start() {
-    this.socket.on('state-update', msg => {
+    this.socket.on('status-update', msg => {
       this.opponentBee.updateFromSimpleState(msg);
     });
     this.loadAssets();
