@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 class Bee {
   constructor(initialX = 0, initialY = 0) {
     this.pitch = 0.0; // radians
@@ -87,16 +89,19 @@ class Bee {
     function distance(controlLocation, wingLocation) {
       let distance = (wingLocation - controlLocation) % 1;
       if (distance > 0.5) distance -= 1;
+      if (distance < -0.5) distance += 1;
       return distance;
     }
 
     function forceForWing(wingLocation, inputsForWing) {
+      if (_.every(inputsForWing)) {
+        inputsForWing = [0, 0, 0];
+      }
       const controlLocations = [1/6, 3/6, 5/6];
-      let distances = controlLocations.map(l => distance(l, wingLocation));
-
+      let distances = controlLocations.map(l => -distance(l, wingLocation));
       // make it so that you can hold the buttons down slightly past the control
       // points
-      const kindness = 0.2;
+      const kindness = 0.18;
       distances = distances.map(d => Math.abs(d) < kindness ? Math.abs(d) : d);
       let force = 0;
       for (let i = 0; i < 3; i++) {
@@ -119,7 +124,7 @@ class Bee {
       forceForWing(this.rightWingLocation, inputs.right) / WING_INERTIA
     );
 
-    const WING_EASING = 0.05;
+    const WING_EASING = 0.02;
     leftWingV *= (1- WING_EASING); // this should take into account framerate
     rightWingV *= (1 - WING_EASING);
 
