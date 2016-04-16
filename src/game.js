@@ -154,7 +154,7 @@ class Game {
 
   resizeCanvas() {
     var $canvas = $('#game');
-    $canvas[0].width = window.innerWidth;
+    $canvas[0].width = 1440;
     $canvas[0].height = window.innerHeight;
     this.draw();
   }
