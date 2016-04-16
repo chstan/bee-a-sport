@@ -32,9 +32,11 @@ var games = {},
               return;
       }
       if (games[data.gamekey].length === 2) {
-        games[data.gamekey].forEach(u => {
-          u.socket.emit('start');
-        });
+          setTimeout(() => {
+            games[data.gamekey].forEach(u => {
+                u.socket.emit('start');
+            });
+          }, 500);
       }
     });
 
@@ -51,6 +53,15 @@ var games = {},
 
       const opponent = _.filter(games[gamekey], g => g.socket !== socket)[0];
       opponent.socket.emit('state-update', beeState);
+    });
+
+    socket.on('disconnect', () => {
+        const gamekey = keys[socket]
+        const players = games[gamekey];
+        players.forEach(p => {
+            delete keys[p.socket];
+        });
+        delete games[gamekey];
     });
   });
 

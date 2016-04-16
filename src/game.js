@@ -20,7 +20,12 @@ class Game {
     this.state = GameState.SETUP;
 
     this.socket.on('start', () => {
-      this.state = GameState.STARTED;
+        var $msg = $('#big-msg');
+        $msg.show();
+        setTimeout(() => {
+            $msg.hide();
+        }, 250);
+        this.state = GameState.STARTED;
     });
 
     this.socket.on('reset', () => {
@@ -29,6 +34,9 @@ class Game {
 
     this.bindDOM();
     this.loopCallback = () => this.onLoop();
+    this.register({
+        gamekey: 1
+    })
   }
 
   bindDOM() {
@@ -74,11 +82,12 @@ class Game {
 
     // send information on our bee to the server
     const beeStateForOpponent = this.bee.simpleState;
-    const pos = _.pick(beeStateForOpponent, ['x', 'y']);
-    if (!_.isEqual(pos, this.lastState)) {
+    //const pos = _.pick(beeStateForOpponent, ['x', 'y']);
+    //if (!_.isEqual(pos, this.lastState)) {
+        //console.log(`x: ${pos.x}`)
       this.socket.emit('state-update', beeStateForOpponent);
-    }
-    this.lastState = pos;
+    //}
+    //this.lastState = pos;
   }
 
   drawBackground(context, distance) {
@@ -118,17 +127,16 @@ class Game {
     context.rotate(pitch);
     // draw rotated wings
     const TEST_ROTATION = ((new Date()).getTime() % 2000) / 2000;
-    const ROT_OFFSET = 0; // Tune this
     const AXIS = 90;
     this.drawAsset(this.assets.bee.body, BEE_CENTER, BEE_CENTER);
     this.drawAsset(
         this.assets.bee.leftWing, 0, 0,
-        leftWingAngle + ROT_OFFSET,
+        leftWingAngle,
         BODY_OFFSET + 130, BODY_OFFSET + 130
     );
     this.drawAsset(
         this.assets.bee.leftWing, 0, 0,
-        -(rightWingAngle + ROT_OFFSET),
+        -rightWingAngle,
         BODY_OFFSET + 130, BODY_OFFSET + 130,
         -1
     );
@@ -141,6 +149,16 @@ class Game {
     } else if (this.bee.win) {
         context.fillText("You Win", $canvas.width()/2, $canvas.height()/2);
     }
+
+    const BEE_START_X = 44;
+    const BEE_END_X = 424;
+
+    context.save();
+    context.translate($canvas.width()/2 - 250, 25);
+    this.drawAsset(this.assets.indicatorBar, 0, 0);
+    this.drawAsset(this.assets.indicatorMe, BEE_START_X + this.bee.x / 100 * (BEE_END_X - BEE_START_X), -3);
+    this.drawAsset(this.assets.indicatorOpp, BEE_START_X + this.opponentBee.x / 100 * (BEE_END_X - BEE_START_X), 47);
+    context.restore();
   }
 
   onLoop() {
@@ -150,7 +168,7 @@ class Game {
   }
 
   start() {
-    this.socket.on('status-update', msg => {
+    this.socket.on('state-update', msg => {
       this.opponentBee.updateFromSimpleState(msg);
     });
     this.loadAssets();
@@ -177,22 +195,18 @@ class Game {
       },
       avatar: new Image,
       background: new Image,
+      indicatorBar: new Image,
+      indicatorMe: new Image,
+      indicatorOpp: new Image,
     };
     this.assets.bee.body.src = '/assets/bee_body.svg';
     this.assets.bee.leftWing.src = '/assets/bee_wing_left.svg';
     this.assets.bee.rightWing.src = '/assets/bee_wing_right.svg';
     this.assets.avatar.src = '/assets/bee_avatar.png';
     this.assets.background.src = '/assets/bee_background.png';
-    this.loadCount = 4;
-    this.assets.bee.body.onload = this.assetLoaded;
-    this.assets.bee.leftWing.onload = this.assetLoaded;
-    this.assets.bee.rightWing.onload = this.assetLoaded;
-    this.assets.avatar.onload = this.assetLoaded;
-    this.assets.background.onload = this.assetLoaded;
-  }
-
-  assetLoaded() {
-    this.loadCount -= 1;
+    this.assets.indicatorBar.src = '/assets/indicator_bar.png';
+    this.assets.indicatorMe.src = '/assets/indicator_yellow.svg';
+    this.assets.indicatorOpp.src = '/assets/indicator_blue.svg';
   }
 
   register(data) {
