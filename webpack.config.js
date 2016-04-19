@@ -1,5 +1,8 @@
+const production = process.env.NODE_ENV === 'production';
+
 module.exports = {
-    devtool: 'source-map',
+    debug:   !production,
+    devtool: production ? false : 'eval',
     entry  : './src/game.js',
     output : {
         path     : './static',

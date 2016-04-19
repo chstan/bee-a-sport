@@ -8,6 +8,7 @@ var GameState = {
   SETUP: 'SETUP',
   WAITING: 'WAITING',
   STARTED: 'STARTED',
+  FINISHED: 'FINISHED',
 };
 
 class Game {
@@ -15,19 +16,13 @@ class Game {
     this.socket = io.connect(window.location.href);
     this.controls = new ControlsListener();
     this.bee = new Bee();
+    this.lastState = this.bee.simpleState;
     this.opponentBee = new Bee();
     this.lastFrame = null;
     this.state = GameState.SETUP;
     this.$canvas = $('#game');
 
-    this.socket.on('start', () => {
-        var $msg = $('#big-msg');
-        $msg.show();
-        setTimeout(() => {
-            $msg.hide();
-        }, 1000);
-        this.state = GameState.STARTED;
-    });
+    this.socket.on('start', () => this.start());
 
     this.socket.on('reset', () => {
       this.reset();
@@ -35,6 +30,8 @@ class Game {
 
     this.bindDOM();
     this.loopCallback = () => this.onLoop();
+
+    this.players = 0;
   }
 
   bindDOM() {
@@ -52,12 +49,28 @@ class Game {
       $('#modal-dim').hide();
       $('#start-modal').hide();
 
+      this.players = 2;
+      this.draw();
       this.register(data);
     });
 
     $('#reset').click(() => {
       this.socket.emit('reset');
     });
+
+    $('#start').click(() => {
+      this.players = 1;
+
+      $('#modal-dim').hide();
+      $('#start-modal').hide();
+
+      this.draw();
+      setTimeout(() => {
+       this.start();
+      }, 1000);
+    });
+
+    window.addEventListener('resize', this.resizeCanvas.bind(this), false);
   }
 
   update() {
@@ -80,12 +93,10 @@ class Game {
 
     // send information on our bee to the server
     const beeStateForOpponent = this.bee.simpleState;
-    //const pos = _.pick(beeStateForOpponent, ['x', 'y']);
-    //if (!_.isEqual(pos, this.lastState)) {
-        //console.log(`x: ${pos.x}`)
+    if (this.lastState.x !== beeStateForOpponent.x) {
       this.socket.emit('state-update', beeStateForOpponent);
-    //}
-    //this.lastState = pos;
+    }
+    this.lastState = beeStateForOpponent
   }
 
   get context() {
@@ -154,9 +165,18 @@ class Game {
     context.textAlign = 'center';
     const textPos = [CANVAS_WIDTH/2, 250];
     if (this.bee.lose) {
-        context.fillText("You Lose", ...textPos);
+      this.state = GameState.FINISHED;
+      context.fillText('You Lose', ...textPos);
     } else if (this.bee.win) {
-        context.fillText("You Win", ...textPos);
+      if (this.players === 2) {
+        context.fillText('You Win', ...textPos);
+      } else {
+        if (this.state !== GameState.FINISHED) {
+          this.endTime = new Date();
+        }
+        context.fillText('Finish!', ...textPos);
+      }
+      this.state = GameState.FINISHED;
     }
 
     const BEE_START_X = 44;
@@ -166,8 +186,23 @@ class Game {
     context.translate(CANVAS_WIDTH/2 - 250, 25);
     this.drawAsset(this.assets.indicatorBar, 0, 0);
     this.drawAsset(this.assets.indicatorMe, BEE_START_X + this.bee.x / 100 * (BEE_END_X - BEE_START_X), -3);
-    this.drawAsset(this.assets.indicatorOpp, BEE_START_X + this.opponentBee.x / 100 * (BEE_END_X - BEE_START_X), 47);
+
+    if (this.players === 2) {
+      this.drawAsset(this.assets.indicatorOpp, BEE_START_X + this.opponentBee.x / 100 * (BEE_END_X - BEE_START_X), 47);
+    }
     context.restore();
+
+    if (this.players !== 1) return;
+
+    let curTime = new Date();
+    if (this.state === GameState.FINISHED) {
+      curTime = this.endTime;
+    } else if (this.state !== GameState.STARTED) {
+      return;
+    }
+
+    const elapsed = _.round((curTime - this.startTime) / 1000, 1);
+    context.fillText(`${elapsed} s`, CANVAS_WIDTH - 150, 75);
   }
 
   onLoop() {
@@ -176,15 +211,29 @@ class Game {
     requestAnimationFrame(this.loopCallback);
   }
 
-  start() {
-    this.socket.on('state-update', msg => {
-      this.opponentBee.updateFromSimpleState(msg);
-    });
+  init() {
     this.loadAssets();
 
     window.addEventListener('resize', this.resizeCanvas.bind(this), false);
-
     this.resizeCanvas();
+  }
+
+  start() {
+    if (this.players === 1) {
+      this.startTime = new Date();
+    }
+
+    this.socket.on('state-update', msg => {
+      this.opponentBee.updateFromSimpleState(msg);
+    });
+
+    var $msg = $('#big-msg');
+    $msg.show();
+    setTimeout(() => {
+      $msg.hide();
+    }, 1000);
+
+    this.state = GameState.STARTED;
 
     this.onLoop();
   }
@@ -237,13 +286,9 @@ class Game {
     this.socket.emit('register', data);
     this.state = GameState.WAITING;
   }
-
-  reset() {
-    this.state = GameState.SETUP;
-  }
 }
 
 $(document).ready(() => {
   var game = new Game();
-  game.start();
+  game.init();
 });
